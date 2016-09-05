@@ -18,7 +18,7 @@ public class BaseAplication extends Application {
         File cacheFile = new File(getCacheDir(), "responses");
         deps = DaggerDeps.builder()
                 .appModule(new AppModule(this))
-                .networkModule(new NetworkModule(cacheFile, "http://staging.server.com")).build();
+                .networkModule(new NetworkModule(cacheFile, getApplicationContext().getString(R.string.server_url))).build();
     }
 
     public Deps getDeps() {

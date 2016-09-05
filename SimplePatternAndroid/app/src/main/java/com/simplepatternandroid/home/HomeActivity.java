@@ -9,8 +9,9 @@ import com.simplepatternandroid.R;
 
 import javax.inject.Inject;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements HomeView {
     private String TAG = HomeActivity.class.getSimpleName();
+    private HomePresenter homePresenter;
 
     @Inject
     public HomeService homeService;
@@ -20,6 +21,13 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ((BaseAplication) getApplication()).getDeps().inject(this);
         setContentView(R.layout.activity_home);
+        homePresenter = new HomePresenter(homeService, this);
         Log.i(TAG, homeService.hello());
+        homePresenter.getProvinsi();
+    }
+
+    @Override
+    public void showLog(String log) {
+        Log.i(TAG, log);
     }
 }

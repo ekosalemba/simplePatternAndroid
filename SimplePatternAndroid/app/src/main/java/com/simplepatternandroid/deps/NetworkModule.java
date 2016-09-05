@@ -41,15 +41,13 @@ public class NetworkModule {
                     @Override
                     public okhttp3.Response intercept(Chain chain) throws IOException {
                         Request original = chain.request();
-
                         // Customize the request
                         Request request = original.newBuilder()
                                 .header("Content-Type", "application/json")
-                                .removeHeader("Pragma")
+//                                .removeHeader("Pragma")
 //                                .header("Cache-Control", String.format("max-age=%d", BuildConfig.CACHETIME))
                                 .header("Cache-Control", String.format("max-age=%d", 432000))
                                 .build();
-
                         okhttp3.Response response = chain.proceed(request);
                         response.cacheResponse();
                         // Customize or return the response
@@ -60,7 +58,6 @@ public class NetworkModule {
 
                 .build();
 
-
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(okHttpClient)
@@ -69,19 +66,4 @@ public class NetworkModule {
 //                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
-
-//    @Provides
-//    @Singleton
-//    @SuppressWarnings("unused")
-//    public NetworkService providesNetworkService(
-//            Retrofit retrofit) {
-//        return retrofit.create(NetworkService.class);
-//    }
-//    @Provides
-//    @Singleton
-//    @SuppressWarnings("unused")
-//    public Service providesService(
-//            NetworkService networkService) {
-//        return new Service(networkService);
-//    }
 }

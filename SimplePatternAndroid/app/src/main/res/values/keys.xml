@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_url" translatable="false">https://production.server.co.id</string>
+</resources>
