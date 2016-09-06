@@ -2,6 +2,8 @@ package com.simplepatternandroid.home;
 
 import android.util.Log;
 
+import com.simplepatternandroid.network.NetworkError;
+
 public class HomePresenter {
     String TAG = HomePresenter.class.getSimpleName();
     HomeService homeService;
@@ -20,8 +22,8 @@ public class HomePresenter {
             }
 
             @Override
-            public void onError(String error) {
-                Log.i(TAG, error.toString());
+            public void onError(NetworkError networkError) {
+                Log.i(TAG, networkError.toString());
             }
         });
     }

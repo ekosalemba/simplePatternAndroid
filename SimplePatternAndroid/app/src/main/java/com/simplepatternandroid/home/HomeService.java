@@ -2,6 +2,8 @@ package com.simplepatternandroid.home;
 
 import android.util.Log;
 
+import com.simplepatternandroid.network.NetworkError;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,13 +27,19 @@ public class HomeService {
             call.enqueue(new Callback<ProvinsiResponse>() {
                 @Override
                 public void onResponse(Call<ProvinsiResponse> call, Response<ProvinsiResponse> response) {
-                    getProvinsiCallback.onSuccess(response.body());
+                    Log.e(TAG, response.code() + "");
+                    Log.e(TAG, response.message() + "");
+                    if (response.body() != null) {
+                        getProvinsiCallback.onSuccess(response.body());
+                    } else {
+                        Log.e(TAG, response.toString());
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<ProvinsiResponse> call, Throwable t) {
                     Log.e(TAG, t.toString());
-                    getProvinsiCallback.onError(t.getMessage());
+                    getProvinsiCallback.onError(new NetworkError(t));
                 }
             });
         } catch (Error error) {
@@ -43,6 +51,6 @@ public class HomeService {
 
         void onSuccess(ProvinsiResponse provinsiResponse);
 
-        void onError(String error);
+        void onError(NetworkError networkError);
     }
 }
