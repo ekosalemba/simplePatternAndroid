@@ -2,6 +2,9 @@ package com.simplepatternandroid.deps;
 
 import android.content.Context;
 
+import com.simplepatternandroid.R;
+import com.simplepatternandroid.network.AppHeaderRequestInterceptor;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -14,6 +17,7 @@ import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -33,16 +37,24 @@ public class NetworkModule {
     @Provides
     @Singleton
     @SuppressWarnings("unused")
-    public HttpLoggingInterceptor providesOkHttp3LoggingInterceptor(Context context) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(logLevel("BODY"));
+    public AppHeaderRequestInterceptor providesAppHeaderRequestInterceptor(Context context) {
+        AppHeaderRequestInterceptor interceptor = new AppHeaderRequestInterceptor(context);
         return interceptor;
     }
 
     @Provides
     @Singleton
     @SuppressWarnings("unused")
-    public OkHttpClient providesOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor) {
+    public HttpLoggingInterceptor providesOkHttp3LoggingInterceptor(Context context) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(logLevel(context.getString(R.string.log_level)));
+        return interceptor;
+    }
+
+    @Provides
+    @Singleton
+    @SuppressWarnings("unused")
+    public OkHttpClient providesOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor, AppHeaderRequestInterceptor appHeaderRequestInterceptor) {
         Cache cache = null;
         try {
             cache = new Cache(cacheFile, 10 * 1024 * 1024);
@@ -50,6 +62,7 @@ public class NetworkModule {
             e.printStackTrace();
         }
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(appHeaderRequestInterceptor)
                 .addInterceptor(httpLoggingInterceptor)
                 .cache(cache)
                 .build();
@@ -81,7 +94,7 @@ public class NetworkModule {
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())
-//                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
 }

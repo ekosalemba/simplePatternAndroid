@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="server_url" translatable="false">http://jendela.data.kemdikbud.go.id/api/index.php/</string>
+    <string name="log_level" translatable="false">BODY</string>
 </resources>

@@ -27,8 +27,8 @@ public class HomeService {
             call.enqueue(new Callback<ProvinsiResponse>() {
                 @Override
                 public void onResponse(Call<ProvinsiResponse> call, Response<ProvinsiResponse> response) {
-                    Log.e(TAG, response.code() + "");
-                    Log.e(TAG, response.message() + "");
+                    Log.i(TAG, response.code() + "");
+                    Log.i(TAG, response.message() + "");
                     if (response.body() != null) {
                         getProvinsiCallback.onSuccess(response.body());
                     } else {
