@@ -27,4 +27,18 @@ public class HomePresenter {
             }
         });
     }
+
+    public void getProvinsiReactive() {
+        homeService.getProvinsiReactive(new HomeService.GetProvinsiReactiveCallback() {
+            @Override
+            public void onSuccess(ProvinsiResponse provinsiResponse) {
+                Log.i(TAG, provinsiResponse.toString());
+            }
+
+            @Override
+            public void onError(NetworkError networkError) {
+                Log.i(TAG, networkError.toString());
+            }
+        });
+    }
 }

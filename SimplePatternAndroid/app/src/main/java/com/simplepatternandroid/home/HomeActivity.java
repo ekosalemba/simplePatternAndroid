@@ -23,7 +23,8 @@ public class HomeActivity extends BaseActivity implements HomeView {
         setContentView(R.layout.activity_home);
         homePresenter = new HomePresenter(homeService, this);
         Log.i(TAG, homeService.hello());
-        homePresenter.getProvinsi();
+//        homePresenter.getProvinsi();
+        homePresenter.getProvinsiReactive();
     }
 
     @Override

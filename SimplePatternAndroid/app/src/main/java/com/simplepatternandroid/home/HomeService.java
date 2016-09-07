@@ -7,6 +7,10 @@ import com.simplepatternandroid.network.NetworkError;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class HomeService {
     private String TAG = HomeService.class.getSimpleName();
@@ -47,9 +51,41 @@ public class HomeService {
         }
     }
 
+    public Subscription getProvinsiReactive(final GetProvinsiReactiveCallback getProvinsiReactiveCallback) {
+        return homeNetworkService.getProvinsiReactive()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ProvinsiResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, e.toString());
+                        getProvinsiReactiveCallback.onError(new NetworkError(e));
+                    }
+
+                    @Override
+                    public void onNext(ProvinsiResponse provinsiResponse) {
+                        Log.i(TAG, provinsiResponse.toString());
+                        getProvinsiReactiveCallback.onSuccess(provinsiResponse);
+                    }
+                });
+
+    }
+
     public interface GetProvinsiCallback {
 
         void onSuccess(ProvinsiResponse provinsiResponse);
+
+        void onError(NetworkError networkError);
+    }
+
+    public interface GetProvinsiReactiveCallback {
+
+        void onSuccess(ProvinsiResponse response);
 
         void onError(NetworkError networkError);
     }
