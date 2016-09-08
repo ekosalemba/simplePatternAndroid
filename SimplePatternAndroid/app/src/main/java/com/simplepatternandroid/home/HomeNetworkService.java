@@ -1,5 +1,7 @@
 package com.simplepatternandroid.home;
 
+import com.google.gson.JsonArray;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import rx.Observable;
@@ -10,4 +12,7 @@ public interface HomeNetworkService {
 
     @GET("CWilayah/wilayahGET?mst_kode_wilayah=010000")
     Observable<ProvinsiResponse> getProvinsiReactive();
+
+    @GET("UserInformationRecoveryService/getUserIdentitySupportedClaims?dialect=http%3A%2F%2Fwso2.org%2Fclaims\n")
+    Observable<JsonArray> getSampleHttps();
 }

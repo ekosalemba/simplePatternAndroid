@@ -2,6 +2,7 @@ package com.simplepatternandroid.home;
 
 import android.util.Log;
 
+import com.google.gson.JsonArray;
 import com.simplepatternandroid.network.NetworkError;
 
 public class HomePresenter {
@@ -33,6 +34,20 @@ public class HomePresenter {
             @Override
             public void onSuccess(ProvinsiResponse provinsiResponse) {
                 Log.i(TAG, provinsiResponse.toString());
+            }
+
+            @Override
+            public void onError(NetworkError networkError) {
+                Log.i(TAG, networkError.toString());
+            }
+        });
+    }
+
+    public void getSampleHttps() {
+        homeService.getSampleHttps(new HomeService.GetSampleCallback() {
+            @Override
+            public void onSuccess(JsonArray jsonArray) {
+                Log.i(TAG, jsonArray.toString());
             }
 
             @Override

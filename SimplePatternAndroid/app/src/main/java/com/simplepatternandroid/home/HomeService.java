@@ -2,6 +2,7 @@ package com.simplepatternandroid.home;
 
 import android.util.Log;
 
+import com.google.gson.JsonArray;
 import com.simplepatternandroid.network.NetworkError;
 
 import retrofit2.Call;
@@ -76,6 +77,31 @@ public class HomeService {
 
     }
 
+    public Subscription getSampleHttps(final GetSampleCallback getSampleCallback) {
+        return homeNetworkService.getSampleHttps()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<JsonArray>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, e.toString());
+                        getSampleCallback.onError(new NetworkError(e));
+                    }
+
+                    @Override
+                    public void onNext(JsonArray jsonArray) {
+                        Log.i(TAG, jsonArray.toString());
+                        getSampleCallback.onSuccess(jsonArray);
+                    }
+                });
+
+    }
+
     public interface GetProvinsiCallback {
 
         void onSuccess(ProvinsiResponse provinsiResponse);
@@ -86,6 +112,13 @@ public class HomeService {
     public interface GetProvinsiReactiveCallback {
 
         void onSuccess(ProvinsiResponse response);
+
+        void onError(NetworkError networkError);
+    }
+
+    public interface GetSampleCallback {
+
+        void onSuccess(JsonArray response);
 
         void onError(NetworkError networkError);
     }
