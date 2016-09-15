@@ -4,10 +4,19 @@ import android.content.Context;
 
 import com.simplepatternandroid.R;
 import com.simplepatternandroid.network.AppHeaderRequestInterceptor;
+import com.simplepatternandroid.util.SSLUtils;
 
 import java.io.File;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -21,12 +30,14 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 @Module
 public class NetworkModule {
-    File cacheFile;
-    String baseUrl;
 
-    public NetworkModule(File cacheFile, String baseUrl) {
-        this.cacheFile = cacheFile;
-        this.baseUrl = baseUrl;
+    public static final int CACHE_DIR_SIZE_30MB = 30 * 1024 * 1024;
+
+    @Provides
+    @Singleton
+    @SuppressWarnings("unused")
+    public Cache providesCache(Context context) {
+        return new Cache(context.getExternalCacheDir(), CACHE_DIR_SIZE_30MB);
     }
 
     @Provides
@@ -49,19 +60,52 @@ public class NetworkModule {
     @Provides
     @Singleton
     @SuppressWarnings("unused")
-    public OkHttpClient providesOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor, AppHeaderRequestInterceptor appHeaderRequestInterceptor) {
-        Cache cache = null;
-        try {
-            cache = new Cache(cacheFile, 10 * 1024 * 1024);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public OkHttpClient providesOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor, AppHeaderRequestInterceptor appHeaderRequestInterceptor, Cache cache) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(appHeaderRequestInterceptor)
                 .addInterceptor(httpLoggingInterceptor)
                 .cache(cache)
                 .build();
         return okHttpClient;
+
+    }
+
+    @Provides
+    @Singleton
+    @SuppressWarnings("unused")
+    @Named("unsecureOkhttp")
+    public OkHttpClient providesUnsecureOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor, AppHeaderRequestInterceptor appHeaderRequestInterceptor, Cache cache) {
+        try {
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            try {
+                sslContext.init(null, new TrustManager[]{SSLUtils.trustManager}, null);
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .sslSocketFactory(sslSocketFactory)
+                    .hostnameVerifier(new HostnameVerifier() {
+                        @Override
+                        public boolean verify(String s, SSLSession sslSession) {
+                            return true;
+                        }
+                    })
+                    .addInterceptor(appHeaderRequestInterceptor)
+                    .addInterceptor(httpLoggingInterceptor)
+                    .cache(cache)
+                    .build();
+            return okHttpClient;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(appHeaderRequestInterceptor)
+                .addInterceptor(httpLoggingInterceptor)
+                .build();
+        return okHttpClient;
+
     }
 
     private okhttp3.logging.HttpLoggingInterceptor.Level logLevel(String level) {
@@ -82,10 +126,10 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit(OkHttpClient okHttpClient) {
+    Retrofit provideRetrofit(@Named("unsecureOkhttp") OkHttpClient okHttpClient, Context context) {
         okHttpClient.interceptors();
         return new Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(context.getString(R.string.server_url))
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())

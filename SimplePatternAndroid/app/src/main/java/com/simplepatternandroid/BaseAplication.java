@@ -15,10 +15,9 @@ public class BaseAplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        File cacheFile = new File(getCacheDir(), "responses");
         deps = DaggerDeps.builder()
                 .appModule(new AppModule(this))
-                .networkModule(new NetworkModule(cacheFile, getApplicationContext().getString(R.string.server_url))).build();
+                .build();
     }
 
     public Deps getDeps() {

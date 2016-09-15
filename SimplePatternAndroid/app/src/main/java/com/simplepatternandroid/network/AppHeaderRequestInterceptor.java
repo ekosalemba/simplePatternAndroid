@@ -11,7 +11,7 @@ import okhttp3.Response;
 
 public class AppHeaderRequestInterceptor implements Interceptor {
     public static final String X_APP_VERSION = "X-AppVersion";
-    public static final String X_AUTHORIZATION = "authorization";
+    public static final String X_AUTHORIZATION = "Authorization";
 
     private final String appVersionName;
 

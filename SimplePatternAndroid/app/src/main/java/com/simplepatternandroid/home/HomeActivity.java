@@ -24,8 +24,8 @@ public class HomeActivity extends BaseActivity implements HomeView {
         homePresenter = new HomePresenter(homeService, this);
         Log.i(TAG, homeService.hello());
 //        homePresenter.getProvinsi();
-        homePresenter.getProvinsiReactive();
-//        homePresenter.getSampleHttps();
+//        homePresenter.getProvinsiReactive();
+        homePresenter.getSampleHttps();
     }
 
     @Override
