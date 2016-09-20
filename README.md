@@ -11,8 +11,11 @@ In this project, there are few things about pattern and also implementation of s
   Http client for add interceptor, cache and many things
 - RxJava / Reactive
   For easier handling callback
+- MVVM
+  Pattern to handle view
+- Data binding
+  Bind data to view, no more findViewById
   
   
 What's next?
-- MVVM
-- Data binding
+- complex data binding?
