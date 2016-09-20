@@ -3,6 +3,7 @@ package com.simplepatternandroid.home;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.simplepatternandroid.network.NetworkError;
 
 public class HomePresenter {
@@ -33,6 +34,7 @@ public class HomePresenter {
         homeService.getProvinsiReactive(new HomeService.GetProvinsiReactiveCallback() {
             @Override
             public void onSuccess(ProvinsiResponse provinsiResponse) {
+                homeView.onSuccessGetProvinsi(provinsiResponse);
                 Log.i(TAG, provinsiResponse.toString());
             }
 
@@ -44,15 +46,15 @@ public class HomePresenter {
     }
 
     public void getSampleHttps() {
-        homeService.getSampleHttps(new HomeService.GetSampleCallback() {
+        homeService.getSampleHttps(new HomeService.GetCallback<JsonObject>() {
             @Override
-            public void onSuccess(JsonArray jsonArray) {
-                Log.i(TAG, jsonArray.toString());
+            public void onSuccess(JsonObject jsonObject) {
+                Log.i(TAG, jsonObject.toString());
             }
 
             @Override
             public void onError(NetworkError networkError) {
-                Log.i(TAG, networkError.toString());
+                Log.e(TAG, networkError.toString());
             }
         });
     }
