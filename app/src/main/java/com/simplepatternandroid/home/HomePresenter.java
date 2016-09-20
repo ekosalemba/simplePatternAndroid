@@ -34,6 +34,7 @@ public class HomePresenter {
         homeService.getProvinsiReactive(new HomeService.GetProvinsiReactiveCallback() {
             @Override
             public void onSuccess(ProvinsiResponse provinsiResponse) {
+                homeView.onSuccessGetProvinsi(provinsiResponse);
                 Log.i(TAG, provinsiResponse.toString());
             }
 

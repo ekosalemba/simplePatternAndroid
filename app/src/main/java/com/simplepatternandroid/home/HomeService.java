@@ -123,11 +123,4 @@ public class HomeService {
 
         void onError(NetworkError networkError);
     }
-
-    public interface GetSampleCallback {
-
-        void onSuccess(JsonArray response);
-
-        void onError(NetworkError networkError);
-    }
 }
