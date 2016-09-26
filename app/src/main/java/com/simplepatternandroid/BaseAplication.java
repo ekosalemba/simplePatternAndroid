@@ -5,9 +5,6 @@ import android.app.Application;
 import com.simplepatternandroid.deps.AppModule;
 import com.simplepatternandroid.deps.DaggerDeps;
 import com.simplepatternandroid.deps.Deps;
-import com.simplepatternandroid.deps.NetworkModule;
-
-import java.io.File;
 
 public class BaseAplication extends Application {
     private Deps deps;

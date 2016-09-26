@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".home.HomeActivity">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.simplepatternandroid.home.HomeViewModel" />
+
+        <variable
+            name="presenter"
+            type="com.simplepatternandroid.home.HomePresenter" />
+
+        <import type="android.view.View" />
+
+        <import type="com.simplepatternandroid.R" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/provinsi_recycler_view"
+        <Button
+            android:id="@+id/button_hide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> presenter.getProvinsiReactive()}"
+            android:text="TRY AGAIN"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{viewModel.onLoading ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+            android:setOnRefreshListener="@{viewModel.getRefreshListener}"
+            android:visibility="@{viewModel.onLoading ? View.GONE : View.VISIBLE}"
+            tools:visibility="visible">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/provinsi_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 </layout>
