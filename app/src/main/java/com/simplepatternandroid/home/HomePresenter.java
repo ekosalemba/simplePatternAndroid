@@ -40,6 +40,7 @@ public class HomePresenter {
 
             @Override
             public void onError(NetworkError networkError) {
+                homeView.onErrorGetProvinsi(networkError);
                 Log.i(TAG, networkError.toString());
             }
         });

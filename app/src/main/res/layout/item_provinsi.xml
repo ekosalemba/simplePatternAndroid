@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="@dimen/cardview_default_elevation">
 
     <data>
@@ -10,17 +11,28 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/layout_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cardview_dark_background"
-        android:orientation="vertical"
-        android:padding="@dimen/cardview_default_elevation">
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_nama_provinsi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="@{viewModel.nama}"
-            android:textColor="@color/cardview_light_background" />
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="7pt"
+            tools:text="Provinsi" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/cardview_shadow_start_color" />
     </LinearLayout>
 </layout>
